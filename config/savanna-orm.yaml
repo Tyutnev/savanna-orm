@@ -1,0 +1,10 @@
+orm:
+  connections:
+    Default:
+      - engine: MySQL
+      - username: root
+      - password: 123
+      - database: orm
+  default_connection: Default
+
+  entity_directory: src/Entity
