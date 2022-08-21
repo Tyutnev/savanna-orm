@@ -2,6 +2,8 @@
 
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
+use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
+
 class QueryBuilder
 {
     private Query $query;
@@ -28,20 +30,14 @@ class QueryBuilder
      */
     public function select(string $alias, array $selection, string $from): self
     {
-        $savql = '';
+        $selectCommand = new SelectCommand();
 
-        if (empty($selection)) {
-            $savql .= sprintf('SELECT %s.* FROM %s AS %s1', $alias, $from);
-        } else {
-            $savql .= sprintf(
-                'SELECT %s FROM %s AS %s',
-                implode(', ', $selection),
-                $from,
-                $alias
-            );
-        }
+        $selectCommand
+            ->setSelection(empty($selection) ? sprintf('%.*', $alias) : implode(', ', $selection))
+            ->setFrom($from)
+            ->setAlias($alias);
 
-        $this->query->setSelect($savql);
+        $this->query->setSelect($selectCommand);
 
         return $this;
     }
