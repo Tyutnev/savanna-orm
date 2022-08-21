@@ -6,11 +6,15 @@ use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 
 class QueryBuilder
 {
-    private Query $query;
+    private Query  $query;
+    private string $alias;
+    private string $targetEntity;
 
-    public function __construct()
+    public function __construct(string $alias, string $targetEntity)
     {
-        $this->query = new Query();
+        $this->query        = new Query();
+        $this->alias        = $alias;
+        $this->targetEntity = $targetEntity;
     }
 
     /**
@@ -23,19 +27,17 @@ class QueryBuilder
      *      Query: $userRepository->createQueryBuilder('u')->select(['u.name', 'u.email', 'u.password'])
      *      SAVQL: SELECT u.name, u.email, u.password FROM App\Entity\User as u
      *
-     * @param string   $alias
      * @param string[] $selection
-     * @param string   $from
      * @return $this
      */
-    public function select(string $alias, array $selection, string $from): self
+    public function select(array $selection): self
     {
         $selectCommand = new SelectCommand();
 
         $selectCommand
-            ->setSelection(empty($selection) ? sprintf('%.*', $alias) : implode(', ', $selection))
-            ->setFrom($from)
-            ->setAlias($alias);
+            ->setSelection(empty($selection) ? sprintf('%.*', $this->alias) : implode(', ', $selection))
+            ->setFrom($this->targetEntity)
+            ->setAlias($this->alias);
 
         $this->query->setSelect($selectCommand);
 
