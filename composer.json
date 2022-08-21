@@ -1,0 +1,19 @@
+{
+    "name": "tyutnev/savanna-orm",
+    "description": "ORM for working with databases in PHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tyutnev\\SavannaOrm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Artem Tyutnev",
+            "email": "artem.tyutnev.nv@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
