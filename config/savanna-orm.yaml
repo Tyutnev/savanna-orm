@@ -5,6 +5,7 @@ orm:
       - username: root
       - password: 123
       - database: orm
+      - host: 127.0.0.1
   default_connection: Default
 
   entity_directory: src/Entity
