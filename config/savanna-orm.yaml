@@ -8,4 +8,4 @@ orm:
       handler: Tyutnev\SavannaOrm\Type\MySQL
   default_connection: Default
 
-  entity_directory: src/Entity
+  entity_directory: src/Example/Entity
