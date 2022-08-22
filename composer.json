@@ -16,6 +16,10 @@
     ],
     "minimum-stability": "stable",
     "require": {
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+        "symfony/yaml": "^6.1"
+    },
+    "require-dev": {
+        "kint-php/kint": "^4.1"
     }
 }

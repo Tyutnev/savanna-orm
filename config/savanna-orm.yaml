@@ -1,11 +1,11 @@
 orm:
   connections:
     Default:
-      - engine: MySQL
-      - username: root
-      - password: 123
-      - database: orm
-      - host: 127.0.0.1
+      username: root
+      password: 123
+      database: orm
+      host: 127.0.0.1
+      handler: Tyutnev\SavannaOrm\Type\MySQL
   default_connection: Default
 
   entity_directory: src/Entity

@@ -2,21 +2,29 @@
 
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
+use Tyutnev\SavannaOrm\EntityFramework;
+use Tyutnev\SavannaOrm\EntityFrameworkFactory;
+use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 
 class QueryBuilder
 {
-    private Query          $query;
-    private QueryFormatter $queryFormatter;
-    private string         $alias;
-    private string         $targetEntity;
+    private Query           $query;
+    private QueryFormatter  $queryFormatter;
+    private EntityFramework $entityFramework;
+    private string          $alias;
+    private string          $targetEntity;
 
+    /**
+     * @throws EntityFrameworkException
+     */
     public function __construct(string $alias, string $targetEntity)
     {
-        $this->query          = new Query();
-        $this->queryFormatter = new QueryFormatter();
-        $this->alias          = $alias;
-        $this->targetEntity   = $targetEntity;
+        $this->query           = new Query();
+        $this->queryFormatter  = new QueryFormatter();
+        $this->entityFramework = (new EntityFrameworkFactory())->factory();
+        $this->alias           = $alias;
+        $this->targetEntity    = $targetEntity;
     }
 
     /**
@@ -44,6 +52,11 @@ class QueryBuilder
         $this->query->setSelect($selectCommand);
 
         return $this;
+    }
+
+    public function fetch(): array
+    {
+        return $this->entityFramework->fetch($this->query, []);
     }
 
     public function getQuery(): Query

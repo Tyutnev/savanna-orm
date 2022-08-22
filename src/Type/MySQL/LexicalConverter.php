@@ -22,10 +22,10 @@ class LexicalConverter implements LexicalConverterInterface
     private function handleSelect(SelectCommand $select): string
     {
         $fromData = explode('\\', $select->getFrom());
-        $from     = $fromData[count($fromData) - 1];
+        $from     = strtolower($fromData[count($fromData) - 1]);
 
         return sprintf(
-            'SELECT % FROM %s AS %s',
+            'SELECT %s FROM %s AS %s',
             $select->getSelection(),
             $from,
             $select->getAlias()
