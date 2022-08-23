@@ -17,7 +17,8 @@
     "minimum-stability": "stable",
     "require": {
       "ext-pdo": "*",
-        "symfony/yaml": "^6.1"
+        "symfony/yaml": "^6.1",
+        "joachim-n/case-converter": "^1.0"
     },
     "require-dev": {
         "kint-php/kint": "^4.1"

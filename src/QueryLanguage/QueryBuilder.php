@@ -56,7 +56,7 @@ class QueryBuilder
 
     public function fetch(): array
     {
-        return $this->entityFramework->fetch($this->query, []);
+        return $this->entityFramework->fetch($this->query, [], $this->targetEntity);
     }
 
     public function getQuery(): Query
