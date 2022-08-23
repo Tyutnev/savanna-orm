@@ -79,12 +79,27 @@ class QueryBuilder
      */
     public function where(string $column, string $operator, mixed $value): self
     {
-        $whereCommand = new WhereCommand();
+        $whereCommand = $this->buildCondition($column, $operator, $value);
 
-        $whereCommand
-            ->setColumn($column)
-            ->setOperator($operator)
-            ->setValue($value);
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    public function andWhere(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = $this->buildCondition($column, $operator, $value);
+        $whereCommand->setPrefix('AND');
+
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    public function orWhere(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = $this->buildCondition($column, $operator, $value);
+        $whereCommand->setPrefix('OR');
 
         $this->query->addCondition($whereCommand);
 
@@ -107,5 +122,13 @@ class QueryBuilder
     public function getSAVQL(): string
     {
         return $this->queryFormatter->format($this->query);
+    }
+
+    private function buildCondition(string $column, string $operator, mixed $value): WhereCommand
+    {
+        return (new WhereCommand())
+            ->setColumn($column)
+            ->setOperator($operator)
+            ->setValue($value);
     }
 }

@@ -17,7 +17,11 @@ class LexicalConverter implements LexicalConverterInterface
             $sql .= $this->handleSelect($query->getSelect());
         }
 
-        foreach ($query->getConditions() as $condition) {
+        foreach ($query->getConditions() as $index => $condition) {
+            if ($index === 0 && $condition->getPrefix()) {
+                $condition->setPrefix(null);
+            }
+
             $sql .= $this->handleCondition($condition);
         }
 
@@ -41,7 +45,7 @@ class LexicalConverter implements LexicalConverterInterface
     {
         if ($whereCommand->getPrefix()) {
             return sprintf(
-                '%s %s %s %s',
+                " %s %s %s '%s'",
                 $whereCommand->getPrefix(),
                 $whereCommand->getColumn(),
                 $whereCommand->getOperator(),
@@ -50,7 +54,7 @@ class LexicalConverter implements LexicalConverterInterface
         }
 
         return sprintf(
-            'WHERE %s %s %s',
+            "WHERE %s %s '%s'",
             $whereCommand->getColumn(),
             $whereCommand->getOperator(),
             $whereCommand->getValue()

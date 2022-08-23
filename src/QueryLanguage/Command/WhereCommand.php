@@ -50,7 +50,7 @@ class WhereCommand
         return $this->prefix;
     }
 
-    public function setPrefix(string $prefix): self
+    public function setPrefix(?string $prefix): self
     {
         $this->prefix = $prefix;
 
