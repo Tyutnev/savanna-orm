@@ -28,10 +28,12 @@ class EntityFactory
     /**
      * @throws ReflectionException
      */
-    public function factoryFromArray(array $data, string $targetEntity): array
+    public function factoryFromArray(array $data, string $targetEntity): EntityCollection
     {
-        return array_map(function (array $item) use ($targetEntity) {
+        $entities = array_map(function (array $item) use ($targetEntity) {
             return $this->factory($item, $targetEntity);
         }, $data);
+
+        return new EntityCollection($entities);
     }
 }

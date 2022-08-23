@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
 use ReflectionException;
+use Tyutnev\SavannaOrm\EntityCollection;
 use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
@@ -109,7 +110,7 @@ class QueryBuilder
     /**
      * @throws ReflectionException
      */
-    public function fetch(): array
+    public function fetch(): EntityCollection
     {
         return $this->entityFramework->fetch($this->query, [], $this->targetEntity);
     }

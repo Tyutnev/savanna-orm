@@ -4,6 +4,7 @@ namespace Tyutnev\SavannaOrm\Example\Repository;
 
 use ReflectionException;
 use Tyutnev\SavannaOrm\BaseRepository;
+use Tyutnev\SavannaOrm\EntityCollection;
 use Tyutnev\SavannaOrm\Example\Entity\User;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 
@@ -18,11 +19,10 @@ class UserRepository extends BaseRepository
      * @throws EntityFrameworkException
      * @throws ReflectionException
      */
-    public function getAll(): array
+    public function getAll(): EntityCollection
     {
         return $this
             ->createQueryBuilder('u')
-            ->select()
             ->fetch();
     }
 
@@ -30,7 +30,7 @@ class UserRepository extends BaseRepository
      * @throws EntityFrameworkException
      * @throws ReflectionException
      */
-    public function getByEmail(string $email): array
+    public function getByEmail(string $email): EntityCollection
     {
         return $this
             ->createQueryBuilder('u')
@@ -43,7 +43,7 @@ class UserRepository extends BaseRepository
      * @throws EntityFrameworkException
      * @throws ReflectionException
      */
-    public function getByNameAndEmail(string $name, string $email): array
+    public function getByNameAndEmail(string $name, string $email): EntityCollection
     {
         return $this
             ->createQueryBuilder('u')
@@ -57,7 +57,7 @@ class UserRepository extends BaseRepository
      * @throws EntityFrameworkException
      * @throws ReflectionException
      */
-    public function getByNameOrEmail(string $name, string $email): array
+    public function getByNameOrEmail(string $name, string $email): EntityCollection
     {
         return $this
             ->createQueryBuilder('u')

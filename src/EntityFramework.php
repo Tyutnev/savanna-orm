@@ -19,7 +19,7 @@ class EntityFramework
     /**
      * @throws ReflectionException
      */
-    public function fetch(Query $savqlQuery, array $params, string $targetEntity): array
+    public function fetch(Query $savqlQuery, array $params, string $targetEntity): EntityCollection
     {
         $connectionEntry   = $this->typeProvider->getConnectionEntry();
         $connectionContext = $this->typeProvider->getConnectionContext();
