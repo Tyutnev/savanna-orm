@@ -2,6 +2,7 @@
 
 namespace Tyutnev\SavannaOrm;
 
+use ReflectionException;
 use Tyutnev\SavannaOrm\QueryLanguage\Query;
 
 class EntityFramework
@@ -15,6 +16,9 @@ class EntityFramework
         $this->entityFactory = new EntityFactory();
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function fetch(Query $savqlQuery, array $params, string $targetEntity): array
     {
         $connectionEntry   = $this->typeProvider->getConnectionEntry();
