@@ -2,10 +2,12 @@
 
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
+use ReflectionException;
 use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
 class QueryBuilder
 {
@@ -25,6 +27,15 @@ class QueryBuilder
         $this->entityFramework = (new EntityFrameworkFactory())->factory();
         $this->alias           = $alias;
         $this->targetEntity    = $targetEntity;
+
+        $selectCommand = new SelectCommand();
+
+        $selectCommand
+            ->setSelection(sprintf('%s.*', $this->alias))
+            ->setFrom($this->targetEntity)
+            ->setAlias($this->alias);
+
+        $this->query->setSelect($selectCommand);
     }
 
     /**
@@ -54,6 +65,35 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * Examples:
+     *      Entity: App\Entity\User
+     *
+     *      Query: $userRepository->createQueryBuilder('u')->select()->where('u.id', '=', 1)
+     *      SAVQL: SELECT u.* FROM App\Entity\User AS u WHERE u.id = 1
+     *
+     * @param string $column
+     * @param string $operator
+     * @param mixed $value
+     * @return $this
+     */
+    public function where(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = new WhereCommand();
+
+        $whereCommand
+            ->setColumn($column)
+            ->setOperator($operator)
+            ->setValue($value);
+
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    /**
+     * @throws ReflectionException
+     */
     public function fetch(): array
     {
         return $this->entityFramework->fetch($this->query, [], $this->targetEntity);

@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\Type\MySQL;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Query;
 use Tyutnev\SavannaOrm\Type\LexicalConverterInterface;
 
@@ -14,6 +15,10 @@ class LexicalConverter implements LexicalConverterInterface
 
         if ($query->getSelect()) {
             $sql .= $this->handleSelect($query->getSelect());
+        }
+
+        foreach ($query->getConditions() as $condition) {
+            $sql .= $this->handleCondition($condition);
         }
 
         return trim($sql);
@@ -30,5 +35,25 @@ class LexicalConverter implements LexicalConverterInterface
             $from,
             $select->getAlias()
         ) . ' ';
+    }
+
+    private function handleCondition(WhereCommand $whereCommand): string
+    {
+        if ($whereCommand->getPrefix()) {
+            return sprintf(
+                '%s %s %s %s',
+                $whereCommand->getPrefix(),
+                $whereCommand->getColumn(),
+                $whereCommand->getOperator(),
+                $whereCommand->getValue()
+            );
+        }
+
+        return sprintf(
+            'WHERE %s %s %s',
+            $whereCommand->getColumn(),
+            $whereCommand->getOperator(),
+            $whereCommand->getValue()
+        );
     }
 }
