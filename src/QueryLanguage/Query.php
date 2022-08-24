@@ -2,6 +2,7 @@
 
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
+use Tyutnev\SavannaOrm\QueryLanguage\Command\GroupByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
@@ -10,13 +11,14 @@ use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
 class Query
 {
-    private ?SelectCommand  $select       = null;
+    private ?SelectCommand  $select         = null;
     /** @var JoinCommand[] */
-    private array           $joins        = [];
+    private array           $joins          = [];
     /** @var WhereCommand[] */
-    private array           $conditions   = [];
-    private ?OrderByCommand $orderBy      = null;
-    private ?LimitCommand   $limit        = null;
+    private array           $conditions     = [];
+    private ?GroupByCommand $groupBy        = null;
+    private ?OrderByCommand $orderBy        = null;
+    private ?LimitCommand   $limit          = null;
 
     public function getSelect(): ?SelectCommand
     {
@@ -60,6 +62,18 @@ class Query
     public function addCondition(WhereCommand $condition): self
     {
         $this->conditions[] = $condition;
+
+        return $this;
+    }
+
+    public function getGroupBy(): ?GroupByCommand
+    {
+        return $this->groupBy;
+    }
+
+    public function setGroupBy(?GroupByCommand $groupBy): self
+    {
+        $this->groupBy = $groupBy;
 
         return $this;
     }

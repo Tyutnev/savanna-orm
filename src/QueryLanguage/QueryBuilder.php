@@ -7,6 +7,7 @@ use Tyutnev\SavannaOrm\EntityCollection;
 use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\GroupByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
@@ -148,6 +149,16 @@ class QueryBuilder
             ->setType('RIGHT');
 
         $this->query->addJoin($joinCommand);
+
+        return $this;
+    }
+
+    public function groupBy(string $column): self
+    {
+        $groupByCommand = (new GroupByCommand())
+            ->setColumn($column);
+
+        $this->query->setGroupBy($groupByCommand);
 
         return $this;
     }
