@@ -32,6 +32,11 @@ class EntityCollection implements ArrayAccess, Iterator
         return $result;
     }
 
+    public function avg(string $column): float
+    {
+        return $this->sum($column) / $this->count();
+    }
+
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->entities[$offset]);
