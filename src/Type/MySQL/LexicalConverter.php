@@ -39,11 +39,11 @@ class LexicalConverter implements LexicalConverterInterface
         $from     = strtolower($fromData[count($fromData) - 1]);
 
         return sprintf(
-            'SELECT %s FROM %s AS %s',
+            'SELECT %s FROM %s AS %s ',
             $select->getSelection(),
             $from,
             $select->getAlias()
-        ) . ' ';
+        );
     }
 
     private function handleJoin(JoinCommand $joinCommand): string
@@ -52,7 +52,7 @@ class LexicalConverter implements LexicalConverterInterface
         $targetTable = strtolower($targetTable[count($targetTable) - 1]);
 
         return sprintf(
-            '%s JOIN %s AS %s ON %s',
+            '%s JOIN %s AS %s ON %s ',
             $joinCommand->getType(),
             $targetTable,
             $joinCommand->getAlias(),

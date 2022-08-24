@@ -119,11 +119,31 @@ class QueryBuilder
      */
     public function innerJoin(string $targetEntity, string $alias, string $on): self
     {
-        $joinCommand = (new JoinCommand())
-            ->setType('INNER')
-            ->setTargetEntity($targetEntity)
-            ->setAlias($alias)
-            ->setOn($on);
+        $joinCommand = $this
+            ->buildJoin($targetEntity, $alias, $on)
+            ->setType('INNER');
+
+        $this->query->addJoin($joinCommand);
+
+        return $this;
+    }
+
+    public function leftJoin(string $targetEntity, string $alias, string $on): self
+    {
+        $joinCommand = $this
+            ->buildJoin($targetEntity, $alias, $on)
+            ->setType('LEFT');
+
+        $this->query->addJoin($joinCommand);
+
+        return $this;
+    }
+
+    public function rightJoin(string $targetEntity, string $alias, string $on): self
+    {
+        $joinCommand = $this
+            ->buildJoin($targetEntity, $alias, $on)
+            ->setType('RIGHT');
 
         $this->query->addJoin($joinCommand);
 
@@ -154,5 +174,13 @@ class QueryBuilder
             ->setColumn($column)
             ->setOperator($operator)
             ->setValue($value);
+    }
+
+    private function buildJoin(string $targetEntity, string $alias, string $on): JoinCommand
+    {
+        return (new JoinCommand())
+            ->setTargetEntity($targetEntity)
+            ->setAlias($alias)
+            ->setOn($on);
     }
 }
