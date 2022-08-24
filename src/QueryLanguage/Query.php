@@ -3,16 +3,18 @@
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
 class Query
 {
-    private ?SelectCommand $select     = null;
+    private ?SelectCommand  $select     = null;
     /** @var JoinCommand[] */
-    private array          $joins      = [];
+    private array           $joins      = [];
     /** @var WhereCommand[] */
-    private array          $conditions = [];
+    private array           $conditions = [];
+    private ?OrderByCommand $orderBy    = null;
 
     public function getSelect(): ?SelectCommand
     {
@@ -56,6 +58,18 @@ class Query
     public function addCondition(WhereCommand $condition): self
     {
         $this->conditions[] = $condition;
+
+        return $this;
+    }
+
+    public function getOrderBy(): ?OrderByCommand
+    {
+        return $this->orderBy;
+    }
+
+    public function setOrderBy(?OrderByCommand $orderBy): self
+    {
+        $this->orderBy = $orderBy;
 
         return $this;
     }

@@ -8,6 +8,7 @@ use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
@@ -146,6 +147,26 @@ class QueryBuilder
             ->setType('RIGHT');
 
         $this->query->addJoin($joinCommand);
+
+        return $this;
+    }
+
+    /**
+     * Examples:
+     *      Entity: App\Entity\User
+     *
+     *      Query: $userRepository->createQueryBuilder('u')->orderBy('id', 'ASC');
+     *      SAVQL: SELECT u.* FROM App\Entity\User AS u ORDER BY u.id ASC
+     *
+     * @return $this
+     */
+    public function orderBy(string $column, string $type): self
+    {
+        $orderByCommand = (new OrderByCommand())
+            ->setColumn($column)
+            ->setType($type);
+
+        $this->query->setOrderBy($orderByCommand);
 
         return $this;
     }

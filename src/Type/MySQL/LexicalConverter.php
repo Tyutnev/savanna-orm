@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\Type\MySQL;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Query;
@@ -28,6 +29,10 @@ class LexicalConverter implements LexicalConverterInterface
 
         foreach ($query->getJoins() as $join) {
             $sql .= $this->handleJoin($join);
+        }
+
+        if ($query->getOrderBy()) {
+            $sql .= $this->handleOrderBy($query->getOrderBy());
         }
 
         return trim($sql);
@@ -77,6 +82,15 @@ class LexicalConverter implements LexicalConverterInterface
             $whereCommand->getColumn(),
             $whereCommand->getOperator(),
             $whereCommand->getValue()
+        );
+    }
+
+    private function handleOrderBy(OrderByCommand $orderByCommand): string
+    {
+        return sprintf(
+            'ORDER BY %s %s',
+            $orderByCommand->getColumn(),
+            $orderByCommand->getType()
         );
     }
 }
