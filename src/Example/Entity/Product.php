@@ -4,12 +4,11 @@ namespace Tyutnev\SavannaOrm\Example\Entity;
 
 use Tyutnev\SavannaOrm\BaseEntity;
 
-class User extends BaseEntity
+class Product extends BaseEntity
 {
     private int    $id;
     private string $name;
-    private string $email;
-    private string $password;
+    private int    $userId;
 
     public function getId(): int
     {
@@ -28,26 +27,14 @@ class User extends BaseEntity
         return $this;
     }
 
-    public function getEmail(): string
+    public function getUserId(): int
     {
-        return $this->email;
+        return $this->userId;
     }
 
-    public function setEmail(string $email): self
+    public function setUserId(int $userId): self
     {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+        $this->userId = $userId;
 
         return $this;
     }

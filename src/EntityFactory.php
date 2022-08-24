@@ -16,6 +16,12 @@ class EntityFactory
         $entity = new $targetEntity;
         $reflectionClass = new ReflectionClass($targetEntity);
 
+        if (!$reflectionClass->getParentClass() || $reflectionClass->getParentClass()->getName() !== BaseEntity::class) {
+            throw new ReflectionException(
+                sprintf('Entity must be extends by %s', BaseEntity::class)
+            );
+        }
+
         foreach ($item as $propertyName => $value) {
             $reflectionClass
                 ->getProperty(CaseString::snake($propertyName)->camel())
