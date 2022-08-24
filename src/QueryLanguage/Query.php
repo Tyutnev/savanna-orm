@@ -2,12 +2,15 @@
 
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
+use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
 class Query
 {
-    private ?SelectCommand $select = null;
+    private ?SelectCommand $select     = null;
+    /** @var JoinCommand[] */
+    private array          $joins      = [];
     /** @var WhereCommand[] */
     private array          $conditions = [];
 
@@ -19,6 +22,21 @@ class Query
     public function setSelect(SelectCommand $select): self
     {
         $this->select = $select;
+
+        return $this;
+    }
+
+    /**
+     * @return JoinCommand[]
+     */
+    public function getJoins(): array
+    {
+        return $this->joins;
+    }
+
+    public function addJoin(JoinCommand $join): self
+    {
+        $this->joins[] = $join;
 
         return $this;
     }

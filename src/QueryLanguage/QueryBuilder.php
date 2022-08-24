@@ -7,6 +7,7 @@ use Tyutnev\SavannaOrm\EntityCollection;
 use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
@@ -103,6 +104,28 @@ class QueryBuilder
         $whereCommand->setPrefix('OR');
 
         $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    /**
+     * Examples:
+     *      Entity: App\Entity\User
+     *
+     *      Query: $userRepository->createQueryBuilder('u')->innerJoin(Product::class, 'p', 'u.id = p.user_id')
+     *      SAVQL: SELECT u.* FROM App\Entity\User AS u INNER JOIN App\Entity\Product AS p ON u.id = p.user_id
+     *
+     * @return $this
+     */
+    public function innerJoin(string $targetEntity, string $alias, string $on): self
+    {
+        $joinCommand = (new JoinCommand())
+            ->setType('INNER')
+            ->setTargetEntity($targetEntity)
+            ->setAlias($alias)
+            ->setOn($on);
+
+        $this->query->addJoin($joinCommand);
 
         return $this;
     }

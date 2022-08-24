@@ -5,6 +5,7 @@ namespace Tyutnev\SavannaOrm\Example\Repository;
 use ReflectionException;
 use Tyutnev\SavannaOrm\BaseRepository;
 use Tyutnev\SavannaOrm\EntityCollection;
+use Tyutnev\SavannaOrm\Example\Entity\Product;
 use Tyutnev\SavannaOrm\Example\Entity\User;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 
@@ -64,6 +65,22 @@ class UserRepository extends BaseRepository
             ->select()
             ->orWhere('u.name', '=', $name)
             ->orWhere('u.email', '=', $email)
+            ->fetch();
+    }
+
+    /**
+     * @throws EntityFrameworkException
+     * @throws ReflectionException
+     */
+    public function getHaveProducts(): EntityCollection
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->innerJoin(
+                Product::class,
+                'p',
+                'u.id = p.user_id'
+            )
             ->fetch();
     }
 }

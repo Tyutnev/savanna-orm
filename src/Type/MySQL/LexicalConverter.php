@@ -2,6 +2,7 @@
 
 namespace Tyutnev\SavannaOrm\Type\MySQL;
 
+use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Query;
@@ -25,6 +26,10 @@ class LexicalConverter implements LexicalConverterInterface
             $sql .= $this->handleCondition($condition);
         }
 
+        foreach ($query->getJoins() as $join) {
+            $sql .= $this->handleJoin($join);
+        }
+
         return trim($sql);
     }
 
@@ -39,6 +44,20 @@ class LexicalConverter implements LexicalConverterInterface
             $from,
             $select->getAlias()
         ) . ' ';
+    }
+
+    private function handleJoin(JoinCommand $joinCommand): string
+    {
+        $targetTable = explode('\\', $joinCommand->getTargetEntity());
+        $targetTable = strtolower($targetTable[count($targetTable) - 1]);
+
+        return sprintf(
+            '%s JOIN %s AS %s ON %s',
+            $joinCommand->getType(),
+            $targetTable,
+            $joinCommand->getAlias(),
+            $joinCommand->getOn()
+        );
     }
 
     private function handleCondition(WhereCommand $whereCommand): string
