@@ -3,18 +3,20 @@
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
 
 class Query
 {
-    private ?SelectCommand  $select     = null;
+    private ?SelectCommand  $select       = null;
     /** @var JoinCommand[] */
-    private array           $joins      = [];
+    private array           $joins        = [];
     /** @var WhereCommand[] */
-    private array           $conditions = [];
-    private ?OrderByCommand $orderBy    = null;
+    private array           $conditions   = [];
+    private ?OrderByCommand $orderBy      = null;
+    private ?LimitCommand   $limit        = null;
 
     public function getSelect(): ?SelectCommand
     {
@@ -70,6 +72,18 @@ class Query
     public function setOrderBy(?OrderByCommand $orderBy): self
     {
         $this->orderBy = $orderBy;
+
+        return $this;
+    }
+
+    public function getLimit(): ?LimitCommand
+    {
+        return $this->limit;
+    }
+
+    public function setLimit(?LimitCommand $limitCommand): self
+    {
+        $this->limit = $limitCommand;
 
         return $this;
     }

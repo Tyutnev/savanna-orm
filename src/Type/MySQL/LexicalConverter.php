@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\Type\MySQL;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
@@ -19,6 +20,10 @@ class LexicalConverter implements LexicalConverterInterface
             $sql .= $this->handleSelect($query->getSelect());
         }
 
+        foreach ($query->getJoins() as $join) {
+            $sql .= $this->handleJoin($join);
+        }
+
         foreach ($query->getConditions() as $index => $condition) {
             if ($index === 0 && $condition->getPrefix()) {
                 $condition->setPrefix(null);
@@ -27,12 +32,12 @@ class LexicalConverter implements LexicalConverterInterface
             $sql .= $this->handleCondition($condition);
         }
 
-        foreach ($query->getJoins() as $join) {
-            $sql .= $this->handleJoin($join);
-        }
-
         if ($query->getOrderBy()) {
             $sql .= $this->handleOrderBy($query->getOrderBy());
+        }
+
+        if ($query->getLimit()) {
+            $sql .= $this->handleLimit($query->getLimit());
         }
 
         return trim($sql);
@@ -78,7 +83,7 @@ class LexicalConverter implements LexicalConverterInterface
         }
 
         return sprintf(
-            "WHERE %s %s '%s'",
+            "WHERE %s %s '%s' ",
             $whereCommand->getColumn(),
             $whereCommand->getOperator(),
             $whereCommand->getValue()
@@ -88,9 +93,17 @@ class LexicalConverter implements LexicalConverterInterface
     private function handleOrderBy(OrderByCommand $orderByCommand): string
     {
         return sprintf(
-            'ORDER BY %s %s',
+            'ORDER BY %s %s ',
             $orderByCommand->getColumn(),
             $orderByCommand->getType()
+        );
+    }
+
+    private function handleLimit(LimitCommand $limitCommand): string
+    {
+        return sprintf(
+            'LIMIT %d',
+            $limitCommand->getLimit()
         );
     }
 }

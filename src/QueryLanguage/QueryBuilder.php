@@ -8,6 +8,7 @@ use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\SelectCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\WhereCommand;
@@ -167,6 +168,16 @@ class QueryBuilder
             ->setType($type);
 
         $this->query->setOrderBy($orderByCommand);
+
+        return $this;
+    }
+
+    public function limit(int $limit): self
+    {
+        $limitCommand = (new LimitCommand())
+            ->setLimit($limit);
+
+        $this->query->setLimit($limitCommand);
 
         return $this;
     }
