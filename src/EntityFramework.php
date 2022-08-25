@@ -31,4 +31,15 @@ class EntityFramework
             $connectionContext->fetch($connectionEntry, $query, $params), $targetEntity
         );
     }
+
+    public function scalar(Query $savqlQuery, string $targetEntity): mixed
+    {
+        $connectionEntry   = $this->typeProvider->getConnectionEntry();
+        $connectionContext = $this->typeProvider->getConnectionContext();
+        $lexicalConverter  = $this->typeProvider->getLexicalConverter();
+
+        $query = $lexicalConverter->convert($savqlQuery);
+
+        return $connectionContext->scalar($connectionEntry, $query);
+    }
 }

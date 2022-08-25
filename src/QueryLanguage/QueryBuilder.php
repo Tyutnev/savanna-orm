@@ -70,6 +70,41 @@ class QueryBuilder
         return $this;
     }
 
+    public function sum(string $column): float
+    {
+        $this->select([sprintf('SUM(%s)', $column)]);
+
+        return $this->scalar();
+    }
+
+    public function avg(string $column): float
+    {
+        $this->select([sprintf('AVG(%s)', $column)]);
+
+        return $this->scalar();
+    }
+
+    public function min(string $column): float
+    {
+        $this->select([sprintf('MIN(%s)', $column)]);
+
+        return $this->scalar();
+    }
+
+    public function max(string $column): float
+    {
+        $this->select([sprintf('MAX(%s)', $column)]);
+
+        return $this->scalar();
+    }
+
+    public function count(string $column): int
+    {
+        $this->select([sprintf('COUNT(%s)', $column)]);
+
+        return $this->scalar();
+    }
+
     /**
      * Examples:
      *      Entity: App\Entity\User
@@ -199,6 +234,11 @@ class QueryBuilder
     public function fetch(): EntityCollection
     {
         return $this->entityFramework->fetch($this->query, [], $this->targetEntity);
+    }
+
+    public function scalar(): mixed
+    {
+        return $this->entityFramework->scalar($this->query, $this->targetEntity);
     }
 
     public function getQuery(): Query
