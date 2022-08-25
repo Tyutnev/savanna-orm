@@ -8,6 +8,7 @@ use Tyutnev\SavannaOrm\EntityFramework;
 use Tyutnev\SavannaOrm\EntityFrameworkFactory;
 use Tyutnev\SavannaOrm\Exception\EntityFrameworkException;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\GroupByCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\HavingCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
@@ -109,47 +110,6 @@ class QueryBuilder
      * Examples:
      *      Entity: App\Entity\User
      *
-     *      Query: $userRepository->createQueryBuilder('u')->select()->where('u.id', '=', 1)
-     *      SAVQL: SELECT u.* FROM App\Entity\User AS u WHERE u.id = 1
-     *
-     * @param string $column
-     * @param string $operator
-     * @param mixed $value
-     * @return $this
-     */
-    public function where(string $column, string $operator, mixed $value): self
-    {
-        $whereCommand = $this->buildCondition($column, $operator, $value);
-
-        $this->query->addCondition($whereCommand);
-
-        return $this;
-    }
-
-    public function andWhere(string $column, string $operator, mixed $value): self
-    {
-        $whereCommand = $this->buildCondition($column, $operator, $value);
-        $whereCommand->setPrefix('AND');
-
-        $this->query->addCondition($whereCommand);
-
-        return $this;
-    }
-
-    public function orWhere(string $column, string $operator, mixed $value): self
-    {
-        $whereCommand = $this->buildCondition($column, $operator, $value);
-        $whereCommand->setPrefix('OR');
-
-        $this->query->addCondition($whereCommand);
-
-        return $this;
-    }
-
-    /**
-     * Examples:
-     *      Entity: App\Entity\User
-     *
      *      Query: $userRepository->createQueryBuilder('u')->innerJoin(Product::class, 'p', 'u.id = p.user_id')
      *      SAVQL: SELECT u.* FROM App\Entity\User AS u INNER JOIN App\Entity\Product AS p ON u.id = p.user_id
      *
@@ -188,12 +148,85 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * Examples:
+     *      Entity: App\Entity\User
+     *
+     *      Query: $userRepository->createQueryBuilder('u')->select()->where('u.id', '=', 1)
+     *      SAVQL: SELECT u.* FROM App\Entity\User AS u WHERE u.id = 1
+     *
+     * @param string $column
+     * @param string $operator
+     * @param mixed $value
+     * @return $this
+     */
+    public function where(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = $this->buildCondition($column, $operator, $value);
+
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    public function andWhere(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = $this->buildCondition($column, $operator, $value);
+        $whereCommand->setPrefix('AND');
+
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
+    public function orWhere(string $column, string $operator, mixed $value): self
+    {
+        $whereCommand = $this->buildCondition($column, $operator, $value);
+        $whereCommand->setPrefix('OR');
+
+        $this->query->addCondition($whereCommand);
+
+        return $this;
+    }
+
     public function groupBy(string $column): self
     {
         $groupByCommand = (new GroupByCommand())
             ->setColumn($column);
 
         $this->query->setGroupBy($groupByCommand);
+
+        return $this;
+    }
+
+    public function having(string $condition): self
+    {
+        $havingCommand = (new HavingCommand())
+            ->setCondition($condition);
+
+        $this->query->addHaving($havingCommand);
+
+        return $this;
+    }
+
+    public function andHaving(string $condition): self
+    {
+        $havingCommand = (new HavingCommand())
+            ->setType('AND')
+            ->setCondition($condition);
+
+        $this->query->addHaving($havingCommand);
+
+        return $this;
+    }
+
+    public function orHaving(string $condition): self
+    {
+        $havingCommand = (new HavingCommand())
+            ->setType('OR')
+            ->setCondition($condition);
+
+        $this->query->addHaving($havingCommand);
 
         return $this;
     }

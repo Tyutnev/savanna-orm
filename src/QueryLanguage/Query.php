@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\QueryLanguage;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\GroupByCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\HavingCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
@@ -17,6 +18,8 @@ class Query
     /** @var WhereCommand[] */
     private array           $conditions     = [];
     private ?GroupByCommand $groupBy        = null;
+    /** @var HavingCommand[]  */
+    private array           $having         = [];
     private ?OrderByCommand $orderBy        = null;
     private ?LimitCommand   $limit          = null;
 
@@ -74,6 +77,18 @@ class Query
     public function setGroupBy(?GroupByCommand $groupBy): self
     {
         $this->groupBy = $groupBy;
+
+        return $this;
+    }
+
+    public function getHaving(): array
+    {
+        return $this->having;
+    }
+
+    public function addHaving(HavingCommand $havingCommand): self
+    {
+        $this->having[] = $havingCommand;
 
         return $this;
     }
