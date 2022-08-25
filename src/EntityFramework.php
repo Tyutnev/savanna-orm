@@ -32,6 +32,22 @@ class EntityFramework
         );
     }
 
+    /**
+     * @throws ReflectionException
+     */
+    public function one(Query $savqlQuery, array $params, string $targetEntity): ?object
+    {
+        $connectionEntry   = $this->typeProvider->getConnectionEntry();
+        $connectionContext = $this->typeProvider->getConnectionContext();
+        $lexicalConverter  = $this->typeProvider->getLexicalConverter();
+
+        $query = $lexicalConverter->convert($savqlQuery);
+
+        return $this->entityFactory->factory(
+            $connectionContext->one($connectionEntry, $query, $params), $targetEntity
+        );
+    }
+
     public function scalar(Query $savqlQuery, string $targetEntity): mixed
     {
         $connectionEntry   = $this->typeProvider->getConnectionEntry();

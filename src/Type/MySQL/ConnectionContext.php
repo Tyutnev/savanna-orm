@@ -19,6 +19,13 @@ class ConnectionContext implements ConnectionContextInterface
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function one(ConnectionEntryInterface $connectionEntry, string $query, array $params): array
+    {
+        $result = $this->fetch($connectionEntry, $query, $params);
+
+        return array_shift($result);
+    }
+
     public function scalar(ConnectionEntryInterface $connectionEntry, string $query): mixed
     {
         /** @var PDO $pdo */

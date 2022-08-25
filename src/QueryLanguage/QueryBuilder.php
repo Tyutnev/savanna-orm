@@ -269,6 +269,14 @@ class QueryBuilder
         return $this->entityFramework->fetch($this->query, [], $this->targetEntity);
     }
 
+    /**
+     * @throws ReflectionException
+     */
+    public function one(): ?object
+    {
+        return $this->entityFramework->one($this->query, [], $this->targetEntity);
+    }
+
     public function scalar(): mixed
     {
         return $this->entityFramework->scalar($this->query, $this->targetEntity);
