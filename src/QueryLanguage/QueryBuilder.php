@@ -212,7 +212,7 @@ class QueryBuilder
     public function andHaving(string $condition): self
     {
         $havingCommand = (new HavingCommand())
-            ->setType('AND')
+            ->setPrefix('AND')
             ->setCondition($condition);
 
         $this->query->addHaving($havingCommand);
@@ -223,7 +223,7 @@ class QueryBuilder
     public function orHaving(string $condition): self
     {
         $havingCommand = (new HavingCommand())
-            ->setType('OR')
+            ->setPrefix('OR')
             ->setCondition($condition);
 
         $this->query->addHaving($havingCommand);

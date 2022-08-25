@@ -4,17 +4,17 @@ namespace Tyutnev\SavannaOrm\QueryLanguage\Command;
 
 class HavingCommand
 {
-    private string $type = '';
-    private string $condition;
+    private ?string $prefix = null;
+    private string  $condition;
 
-    public function getType(): string
+    public function getPrefix(): ?string
     {
-        return $this->type;
+        return $this->prefix;
     }
 
-    public function setType(string $type): self
+    public function setPrefix(string $prefix): self
     {
-        $this->type = $type;
+        $this->prefix = $prefix;
 
         return $this;
     }

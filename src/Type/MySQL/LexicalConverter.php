@@ -3,6 +3,7 @@
 namespace Tyutnev\SavannaOrm\Type\MySQL;
 
 use Tyutnev\SavannaOrm\QueryLanguage\Command\GroupByCommand;
+use Tyutnev\SavannaOrm\QueryLanguage\Command\HavingCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\JoinCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\LimitCommand;
 use Tyutnev\SavannaOrm\QueryLanguage\Command\OrderByCommand;
@@ -35,6 +36,10 @@ class LexicalConverter implements LexicalConverterInterface
 
         if ($query->getGroupBy()) {
             $sql .= $this->handleGroupBy($query->getGroupBy());
+        }
+
+        foreach ($query->getHaving() as $having) {
+            $sql .= $this->handleHaving($having);
         }
 
         if ($query->getOrderBy()) {
@@ -100,6 +105,22 @@ class LexicalConverter implements LexicalConverterInterface
         return sprintf(
             'GROUP BY %s ',
             $groupByCommand->getColumn()
+        );
+    }
+
+    private function handleHaving(HavingCommand $havingCommand): string
+    {
+        if ($havingCommand->getPrefix()) {
+            return sprintf(
+                ' %s %s',
+                $havingCommand->getPrefix(),
+                $havingCommand->getCondition()
+            );
+        }
+
+        return sprintf(
+            'HAVING %s',
+            $havingCommand->getCondition()
         );
     }
 
